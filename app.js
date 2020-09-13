@@ -1,10 +1,8 @@
 const http = require("http");
+const { Buffer } = require("buffer");
 
-function rqServer(req, res) {
-  console.log(req);
-  process.exit();
-}
+const routes = require("./routes");
 
-const server = http.createServer(rqServer);
+const server = http.createServer(routes);
 
 server.listen(3000);
