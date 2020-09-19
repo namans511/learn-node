@@ -1,19 +1,24 @@
-const http = require("http");
-const { Buffer } = require("buffer");
+const path = require('path');
 
-const express = require("express");
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const errorController = require('./controllers/error');
+
 const app = express();
 
-app.use((req, res, next) => {
-  console.log("in the middleware!");
-  next();
-});
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-app.use((req, res, next) => {
-  console.log("in another middleware!");
-  res.send("<h1>whooo wo using express now</h1>");
-});
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-const server = http.createServer(app);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-server.listen(3000);
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+
+app.use(errorController.get404);
+
+app.listen(3000);
